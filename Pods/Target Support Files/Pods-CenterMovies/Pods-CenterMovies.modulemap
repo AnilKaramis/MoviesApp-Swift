@@ -1,0 +1,6 @@
+framework module Pods_CenterMovies {
+  umbrella header "Pods-CenterMovies-umbrella.h"
+
+  export *
+  module * { export * }
+}

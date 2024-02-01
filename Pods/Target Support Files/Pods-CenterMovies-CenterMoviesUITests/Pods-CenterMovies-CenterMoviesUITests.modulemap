@@ -1,0 +1,6 @@
+framework module Pods_CenterMovies_CenterMoviesUITests {
+  umbrella header "Pods-CenterMovies-CenterMoviesUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
