@@ -8,9 +8,10 @@
 import Foundation
 import UIKit
 
-struct TrendingMoviesModel: Codable {
+// MARK: - Welcome
+struct Movies: Codable {
     let page: Int
-    let results: [Movies]
+    let results: [Details]
     let totalPages, totalResults: Int
 
     enum CodingKeys: String, CodingKey {
@@ -20,25 +21,46 @@ struct TrendingMoviesModel: Codable {
     }
 }
 
-struct Movies: Codable, Hashable {
+// MARK: - Result
+struct Details: Codable {
+    let adult: Bool
+    let backdropPath: String
     let id: Int
-    let type: Int
-    let series: Bool
-    let name: String
-    let time: Int
-    let genre: [String]
-    let rating: String
-    let votes: String
-    let photo: String
-    let miniPhoto: String
-    let description: String
-    let trailer: String
-    let comments: [Comments]
-}
-struct Comments: Codable, Hashable {
-    let id: Int?
-    let name: String?
-    let comment: String?
-    let picture: String?
+    let title: String
+    let originalLanguage: OriginalLanguage
+    let originalTitle, overview, posterPath: String
+    let mediaType: MediaType
+    let genreIDS: [Int]
+    let popularity: Double
+    let releaseDate: String
+    let video: Bool
+    let voteAverage: Double
+    let voteCount: Int
+
+    enum CodingKeys: String, CodingKey {
+        case adult
+        case backdropPath = "backdrop_path"
+        case id, title
+        case originalLanguage = "original_language"
+        case originalTitle = "original_title"
+        case overview
+        case posterPath = "poster_path"
+        case mediaType = "media_type"
+        case genreIDS = "genre_ids"
+        case popularity
+        case releaseDate = "release_date"
+        case video
+        case voteAverage = "vote_average"
+        case voteCount = "vote_count"
+    }
 }
 
+enum MediaType: String, Codable {
+    case movie = "movie"
+}
+
+enum OriginalLanguage: String, Codable {
+    case en = "en"
+    case fr = "fr"
+    case ko = "ko"
+}

@@ -7,12 +7,14 @@
 
 import Foundation
 import UIKit
+import RxSwift
+import RxCocoa
 
 class MainViewController: UIViewController {
     
     // MARK: - Variables
     
-    var viewModel = MainViewModel()
+    let viewModel = MainViewModel()
     
     let movieTable:UITableView = {
         var table = UITableView()
@@ -24,14 +26,13 @@ class MainViewController: UIViewController {
         
         view.addSubview(movieTable)
         
+        
         setupTableView()
         MakeConstraint()
     }
-
     override func viewDidAppear(_ animated: Bool) {
         viewModel.getData()
     }
-    
     func setupTableView() {
         self.title = "Main View"
         self.movieTable.delegate = self
@@ -39,7 +40,6 @@ class MainViewController: UIViewController {
         registerCells()
     }
 }
-
 // MARK: - Extensions
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
@@ -49,15 +49,12 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         cell.textLabel?.text = "\(indexPath.row)"
         return cell
     }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRows(in: section)
     }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return viewModel.numberOfSections()
     }
-    
     func registerCells() {
         movieTable.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }

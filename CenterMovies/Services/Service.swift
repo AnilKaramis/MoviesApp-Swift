@@ -7,48 +7,32 @@
 
 import Foundation
 import UIKit
-// MARK: - API
-struct NetworkConstant {
-    static let API_KEY = "https://api.themoviedb.org/3/trending/movie/day?api_key=af067a44d06ee3786eb8c2581fd911ff"
-    static let baseURL = "https://api.themoviedb.org"
+
+//MARK: -RXSWIFT SERVICE
+
+enum MoviesError: Error
+{
+    case serverError
+    case parsingError
 }
 
-// MARK: - Enums
-enum APIError: Error {
-    case failedToGetData
-}
-
-class APICaller {
+class Webservice {
     
-    static let shared = APICaller()
-    
-    static func getTrendingMovies(completion: @escaping (Result<TrendingMoviesModel, Error>) -> Void) {
-        
-        let task  = URLSession.shared.dataTask(with: URLRequest(url: getFullURL())) {
-            data, response, error in
-            guard let data = data, error == nil else {
-                print(String(describing: error))
-                print("1111111111")
-                return
+    func download(url: URL , completion: @escaping (Result<Movies, MoviesError>) -> () ) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if error != nil {
+                completion(.failure(.serverError))
+            } else if let ServiceData = data {
+                let MoviesListData = try? JSONDecoder().decode(Movies.self, from: ServiceData)
+                if let SuccessMoviesListData = MoviesListData {
+                    completion(.success(SuccessMoviesListData))
+                } else {
+                    completion(.failure(.parsingError))
+                }
             }
-            do {
-                let results = try JSONDecoder().decode(TrendingMoviesModel.self , from: data)
-                print(results)
-                print("0000000000000000")
-                completion(.success(results))
-            }
-            catch{
-                completion(.failure(error))
-            }
-        }
-        task.resume()
+        }.resume()
     }
-    
-    static func getFullURL() -> URL {
-        guard let url = URL(string: "\(NetworkConstant.API_KEY)") else {
-            return URL(string: NetworkConstant.baseURL)!}
-        return url
-        }
-    
 }
+
+
 
