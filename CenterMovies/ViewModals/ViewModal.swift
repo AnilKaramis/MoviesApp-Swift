@@ -12,7 +12,7 @@ import RxCocoa
 
 struct MainViewModel {
     
-    let Movies: PublishSubject<Movies> = PublishSubject()
+    let Movies: PublishSubject<[Movies]> = PublishSubject()
     let error: PublishSubject<String> = PublishSubject()
     let loading: PublishSubject<Bool> = PublishSubject()
     
@@ -28,8 +28,8 @@ struct MainViewModel {
         Webservice().download(url: APIkey) { result in
             self.loading.onNext(false)
             switch result {
-            case .success(let success):
-                self.Movies.onNext(success)
+            case .success(let Moviessuccess):
+                self.Movies.onNext(Moviessuccess)
             case .failure(let error):
                 switch error {
                 case .serverError:

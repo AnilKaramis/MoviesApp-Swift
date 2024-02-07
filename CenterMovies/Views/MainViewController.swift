@@ -15,8 +15,10 @@ class MainViewController: UIViewController {
     // MARK: - Variables
     
     let viewModel = MainViewModel()
+    let disposeBag = DisposeBag()
+    var ListModel = [Movies]()
     
-    let movieTable:UITableView = {
+    var movieTable:UITableView = {
         var table = UITableView()
         return table
     }()
@@ -26,12 +28,28 @@ class MainViewController: UIViewController {
         
         view.addSubview(movieTable)
         
-        
         setupTableView()
         MakeConstraint()
     }
     override func viewDidAppear(_ animated: Bool) {
+        setupBindings()
         viewModel.getData()
+    }
+    private func setupBindings() {
+        viewModel
+            .error
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe { errorString in
+                print(errorString)
+            }
+            .disposed(by: disposeBag)
+        viewModel
+            .Movies
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe { subMovies in
+                self.ListModel = subMovies
+                self.movieTable.reloadData()
+            }.disposed(by: disposeBag)
     }
     func setupTableView() {
         self.title = "Main View"
