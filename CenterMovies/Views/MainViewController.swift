@@ -22,11 +22,17 @@ class MainViewController: UIViewController {
         var table = UITableView()
         return table
     }()
+    let indicatorView : UIActivityIndicatorView = {
+        var indicator = UIActivityIndicatorView()
+        indicator.startAnimating()
+        return indicator
+    }()
     // MARK: - Setup
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(movieTable)
+        view.addSubview(indicatorView)
         
         setupTableView()
         MakeConstraint()
@@ -36,6 +42,12 @@ class MainViewController: UIViewController {
         viewModel.getData()
     }
     private func setupBindings() {
+        // Loading
+        viewModel.loading
+            .bind(to: self.indicatorView.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        //Error
         viewModel
             .error
             .observe(on: MainScheduler.asyncInstance)
@@ -43,6 +55,7 @@ class MainViewController: UIViewController {
                 print(errorString)
             }
             .disposed(by: disposeBag)
+        //Model
         viewModel
             .Movies
             .observe(on: MainScheduler.asyncInstance)

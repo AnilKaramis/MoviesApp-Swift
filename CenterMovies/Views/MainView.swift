@@ -14,5 +14,8 @@ extension MainViewController {
         movieTable.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        indicatorView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
     }
 }

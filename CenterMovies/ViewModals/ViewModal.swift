@@ -28,8 +28,8 @@ struct MainViewModel {
         Webservice().download(url: APIkey) { result in
             self.loading.onNext(false)
             switch result {
-            case .success(let Moviessuccess):
-                self.Movies.onNext(Moviessuccess)
+            case .success(let success):
+                self.Movies.onNext([success])
             case .failure(let error):
                 switch error {
                 case .serverError:
